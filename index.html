@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SingPost unified portal - illustrative mock-up</title>
+<style>
+:root{--red:#D7282F;--red-d:#b01f25;--ink:#222;--grey:#404040;--mut:#6b6b6b;--line:#e2e2e2;--bg:#fff;--soft:#f5f5f5;--card:#fff;--ok:#1f7a3d;--okbg:#e6f4ea;--warn:#9a5b00;--warnbg:#fff3df;color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:inherit}
+h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+h1{font-size:2rem}h2{font-size:1.4rem}h3{font-size:1.05rem}
+p{margin:0 0 1em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+.row{display:flex;align-items:center;gap:16px}
+.mut{color:var(--mut)}.small{font-size:.875rem}
+.lnk{color:var(--red);font-size:.9rem}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+/* demo bar */
+#demo{background:#1d1d1d;color:#eee;font-size:13px;position:sticky;top:0;z-index:70}
+#demo .row{padding:6px 20px;justify-content:space-between;flex-wrap:wrap;gap:8px}
+#demo button,#demo label{background:#333;color:#eee;border:1px solid #555;border-radius:6px;padding:3px 10px;font-size:13px}
+#demo .jm{position:relative}
+#jlist{display:none;position:absolute;right:0;top:30px;background:#262626;border:1px solid #555;border-radius:8px;min-width:300px;padding:6px;z-index:80}
+#jlist.open{display:block}
+#jlist button{display:block;width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:6px}
+#jlist button:hover{background:#3a3a3a}
+/* header */
+.strip{background:var(--soft);border-bottom:1px solid var(--line);font-size:14px}
+.strip .row{justify-content:space-between;height:38px}
+.persona a{text-decoration:none;padding:9px 14px;display:inline-block;color:var(--mut)}
+.persona a.on{color:var(--red);font-weight:600;box-shadow:inset 0 -3px var(--red)}
+.tools{display:flex;gap:18px;align-items:center}
+.tools a{text-decoration:none}
+.main{background:var(--bg);border-bottom:1px solid var(--line)}
+.main .row{height:72px}
+.logo{font-size:1.7rem;font-weight:700;color:var(--red);text-decoration:none;letter-spacing:-.5px;margin-right:12px}
+.logo b{color:var(--grey)}
+.menu{display:flex;gap:2px;flex:1;overflow:visible}
+.mi{position:relative}
+.mi>a{display:block;padding:24px 12px;text-decoration:none;font-weight:600;white-space:nowrap;font-size:.95rem}
+.mi:hover>a,.mi:focus-within>a{color:var(--red)}
+.sub{display:none;position:absolute;left:0;top:70px;background:var(--card);border:1px solid var(--line);border-radius:10px;min-width:240px;padding:8px;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.mi:hover .sub,.mi:focus-within .sub{display:block}
+.sub a{display:block;padding:8px 12px;border-radius:6px;text-decoration:none;font-size:.95rem}
+.sub a:hover{background:var(--soft);color:var(--red)}
+.acct{display:flex;gap:10px;align-items:center}
+.dd{position:relative}
+.ddm{display:none;position:absolute;right:0;top:100%;margin-top:6px;background:var(--card);border:1px solid var(--line);border-radius:10px;min-width:280px;padding:8px;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.ddm.open{display:block}
+.ddm a,.ddm button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;border:0;background:none;text-align:left;text-decoration:none;color:var(--ink);font-size:.95rem}
+.ddm a:hover,.ddm button:hover{background:var(--soft)}
+.ddm hr{border:0;border-top:1px solid var(--line);margin:6px 0}
+.ddm .hd{font-size:.8rem;color:var(--mut);padding:6px 12px}
+.av{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:5px 12px 5px 6px;border-radius:999px}
+.av i{font-style:normal;background:var(--red);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-grid;place-items:center;font-size:.8rem;font-weight:700}
+/* buttons */
+.btn{background:var(--red);color:#fff;border:1px solid var(--red);border-radius:8px;padding:10px 20px;font-weight:600;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--red-d)}
+.btn.ghost{background:transparent;color:var(--red)}
+.btn.ghost:hover{background:var(--soft)}
+.btn.lg{padding:13px 28px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.chip{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.8rem;font-weight:600;background:var(--soft);color:var(--grey)}
+.chip.ok{background:var(--okbg);color:var(--ok)}.chip.warn{background:var(--warnbg);color:var(--warn)}.chip.red{background:var(--red);color:#fff}
+.nw{display:none;background:#ffcf33;color:#222;font-size:.68rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle}
+body.hl .nw{display:inline-block}
+body.hl .newbox{outline:2px dashed #e6a800;outline-offset:3px}
+/* service bar */
+#svc{background:var(--card);border-bottom:1px solid var(--line)}
+.svcbar{display:flex;gap:6px;align-items:center;padding:8px 20px;overflow-x:auto;font-size:.9rem}
+.svcbar .lb{color:var(--mut);white-space:nowrap;margin-right:6px}
+.svcbar button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:999px;white-space:nowrap}
+.svcbar button.on{background:var(--red);border-color:var(--red);color:#fff}
+.svcbar button small{opacity:.75;margin-left:6px}
+/* hero */
+.hero{background:linear-gradient(120deg,#BD2426 0%,#8c1214 100%);color:#fff;position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1;padding-top:56px;padding-bottom:56px}
+.hero h1{font-size:2.6rem;max-width:620px;margin-bottom:.6em}
+.hero p{max-width:560px;opacity:.95}
+.trackcard{background:var(--card);color:var(--ink);border-radius:14px;padding:20px;max-width:640px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.trackcard label{font-weight:600;display:block;margin-bottom:8px}
+.trow{display:flex;gap:10px}
+.trow input{flex:1}
+.quick{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:.92rem}
+.quick a{color:var(--red);font-weight:600;text-decoration:none}
+.quick a:hover{text-decoration:underline}
+/* sections */
+.sec{padding:44px 0}
+.sec.alt{background:var(--soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h2,.card h3{margin-bottom:.4em}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.links a{color:var(--red);font-weight:600;text-decoration:none;border:1px solid var(--line);padding:7px 14px;border-radius:999px;font-size:.92rem}
+.links a:hover{background:var(--soft)}
+.feat{display:grid;grid-template-columns:1fr 1fr;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.feat .img{min-height:220px;background:linear-gradient(135deg,#3b3b3b,#1f1f1f);display:grid;place-items:center;color:#fff;font-weight:700;font-size:1.4rem}
+.feat .img.v{background:linear-gradient(135deg,#1c4e6b,#0f2f42)}
+.feat .img.m{background:linear-gradient(135deg,#BD2426,#7a1012)}
+.feat .tx{padding:28px}
+/* pages */
+.pg{padding:28px 20px 60px}
+.ph{margin-bottom:18px}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 28px}
+.act{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:16px;text-align:left}
+.act:hover{border-color:var(--red)}
+.act b{display:block;margin-bottom:2px}
+.act span{font-size:.88rem;color:var(--mut)}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:10px;flex-wrap:wrap}
+.prow b{display:block}
+/* forms */
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.f label{font-weight:600;font-size:.9rem}
+input,select{font:inherit;padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);width:100%}
+input[type=checkbox],input[type=radio]{width:auto}
+.err{background:var(--warnbg);color:var(--warn);padding:10px 14px;border-radius:8px;margin-bottom:14px;font-size:.92rem}
+.okbox{background:var(--okbg);color:var(--ok);padding:12px 16px;border-radius:10px;margin-bottom:14px;font-weight:600}
+.steps{display:flex;gap:8px;margin:0 0 22px}
+.steps span{flex:1;padding:8px 4px;border-bottom:4px solid var(--line);font-size:.88rem;color:var(--mut)}
+.steps .on{border-color:var(--red);color:var(--ink);font-weight:600}
+.steps .dn{border-color:var(--ok);color:var(--ink)}
+.auth{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:44px 20px;align-items:start}
+.authcard,.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px}
+.authside{padding:12px 8px}
+.svcs{list-style:none;padding:0;margin:0 0 18px}
+.svcs li{padding:10px 0;border-bottom:1px solid var(--line)}
+.svcs li span{display:block;color:var(--mut);font-size:.9rem}
+.note{background:var(--soft);padding:14px 16px;border-radius:10px;font-size:.92rem}
+.narrow{max-width:760px;margin:0 auto}
+.opt{display:flex;gap:14px;align-items:flex-start;border:2px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:var(--card);width:100%;text-align:left;color:var(--ink)}
+.opt.on{border-color:var(--red)}
+.opt .mk{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:grid;place-items:center;color:#fff;margin-top:2px}
+.opt.on .mk{background:var(--red);border-color:var(--red)}
+.opt .pr{margin-left:auto;font-weight:700;white-space:nowrap}
+.opt span.d{display:block;color:var(--mut);font-size:.9rem;font-weight:400}
+.btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.tl{list-style:none;margin:0;padding:0 0 0 6px}
+.tl li{position:relative;padding:0 0 18px 28px;border-left:2px solid var(--line);margin-left:6px}
+.tl li::before{content:"";position:absolute;left:-8px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--card);border:2px solid var(--line)}
+.tl li.done{border-color:var(--ok)}.tl li.done::before{background:var(--ok);border-color:var(--ok)}
+.tl li.now::before{background:var(--red);border-color:var(--red)}
+.tl li.now b{color:var(--red)}
+.tl li span{display:block;color:var(--mut);font-size:.88rem}
+.tbl{width:100%;border-collapse:collapse;font-size:.92rem}
+.tbl th,.tbl td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.tbl th{color:var(--mut);font-weight:600;font-size:.82rem}
+.tbl select,.tbl input[type=text]{padding:6px 8px;font-size:.88rem}
+.bar{position:sticky;bottom:0;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;box-shadow:0 -6px 20px rgba(0,0,0,.08)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tabs button{border:0;background:none;color:var(--mut);padding:10px 18px;font-weight:600;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--red);border-color:var(--red)}
+.addr{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
+.addr b{display:block}.addr span{font-size:.85rem;color:var(--mut);display:block;margin-bottom:8px}
+.prod{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.prod .ph1{height:110px;background:var(--soft);display:grid;place-items:center;color:var(--mut);font-size:.85rem}
+.prod div.b{padding:12px 14px}
+.qrbox{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.code{font:700 1.6rem/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.1em}
+/* footer */
+footer{background:var(--soft);border-top:1px solid var(--line);padding:36px 0;margin-top:20px;font-size:.92rem}
+footer .grid4 a{display:block;text-decoration:none;color:var(--mut);padding:3px 0}
+footer .legal{margin-top:22px;color:var(--mut);font-size:.82rem}
+/* chat */
+#fab{position:fixed;right:20px;bottom:20px;z-index:80;background:var(--red);color:#fff;border:0;border-radius:999px;padding:13px 20px;display:flex;gap:8px;align-items:center;font-weight:600;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+#chat{position:fixed;right:20px;bottom:20px;z-index:90;width:380px;max-width:calc(100vw - 24px);height:560px;max-height:calc(100vh - 80px);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}
+#chat[hidden]{display:none}
+#chat header{background:var(--red);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+#chat header small{display:block;opacity:.85}
+#chat header button{background:none;border:0;color:#fff;font-size:1.2rem}
+#cmsgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--soft)}
+.m{max-width:86%;padding:10px 13px;border-radius:14px;font-size:.93rem}
+.m.b{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.m.u{background:var(--red);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.m.s{align-self:center;background:none;color:var(--mut);font-size:.8rem;max-width:100%}
+.m .cardx{background:var(--soft);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.88rem}
+.m .cardx div{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+#cchips{padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--line);background:var(--card);min-height:8px}
+#cchips button{border:1px solid var(--red);color:var(--red);background:var(--card);border-radius:999px;padding:6px 12px;font-size:.85rem}
+#chat form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:var(--card)}
+#chat form .btn{padding:8px 14px}
+.typing{display:inline-flex;gap:4px}.typing i{width:6px;height:6px;border-radius:50%;background:var(--mut);animation:b 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{transform:translateY(-4px);opacity:.5}}
+/* overlay + toast */
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;display:none;place-items:center}
+#ov.on{display:grid}
+#ov .box{background:var(--card);border-radius:16px;padding:30px 34px;max-width:420px;text-align:center}
+.spin{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--red);border-radius:50%;margin:0 auto 14px;animation:r .8s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:10px;z-index:120;display:none;max-width:90vw;font-size:.92rem}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:900px){
+ .grid2,.grid3,.grid4,.acts,.feat,.auth{grid-template-columns:1fr 1fr}
+ .menu{display:none}.hero h1{font-size:2rem}
+}
+@media (max-width:620px){
+ .grid2,.grid3,.grid4,.acts,.feat,.auth{grid-template-columns:1fr}
+ .tools a.hide-s{display:none}
+ .trow{flex-direction:column}
+ .tbl{display:block;overflow-x:auto}
+}
+
+/* ---- site-like shell ---- */
+.hd1{background:#fff}
+.hd1 .row{height:78px;gap:20px}
+.logo img{height:40px;display:block}
+.logotxt{font-size:1.7rem;font-weight:700;color:var(--red);letter-spacing:-.5px}
+.persona{display:flex;background:var(--soft);border-radius:999px;padding:4px;margin-left:8px}
+.persona a{padding:7px 18px;border-radius:999px;font-size:.9rem;text-decoration:none;color:var(--grey);box-shadow:none;font-weight:600}
+.persona a.on{background:var(--red);color:#fff;box-shadow:none}
+.util{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+.util>a,.util .dd>a{display:flex;align-items:center;gap:8px;text-decoration:none;font-weight:600;color:var(--ink)}
+.util img{height:22px;width:auto}
+.util a:hover{color:var(--red)}
+.menurow{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff}
+.menurow .menu{height:54px;align-items:center}
+.mi>a{padding:15px 18px;font-size:.98rem}
+.sub{top:52px}
+.ddm .ti{display:flex;justify-content:flex-start;gap:12px}
+.ddm .ti img{height:26px;width:26px;object-fit:contain}
+#srch{position:fixed;inset:0;background:rgba(255,255,255,.98);z-index:110;display:none;padding:60px 20px}
+#srch.on{display:block}
+#srch .in{max-width:760px;margin:0 auto}
+#srch h3{margin:26px 0 10px;color:var(--mut);font-size:.9rem;font-weight:600}
+#srch .x{position:absolute;right:24px;top:20px;border:0;background:none;font-size:1.6rem}
+.hero.photo{background:linear-gradient(120deg,#D7282F,#8c1214);min-height:430px;display:flex;align-items:center}
+.hero.photo>img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero.photo::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.4),rgba(0,0,0,0) 70%);z-index:1}
+.hero.photo .wrap{z-index:2;width:100%}
+.hero.photo h1{text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.qrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:-34px;position:relative;z-index:3}
+.qtile{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;text-decoration:none;font-weight:700;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.qtile:hover{color:var(--red)}
+.qtile img{height:40px;width:40px;object-fit:contain}
+.svc2 .card{display:flex;flex-direction:column;gap:6px}
+.svc2 .card>img{height:64px;width:64px;object-fit:contain;margin-bottom:6px}
+.band{background:var(--soft);border-radius:14px;padding:26px 28px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+.band h2{margin:0}
+.fx{display:grid;grid-template-columns:1fr 1fr;border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--line)}
+.fx .fimg{background:linear-gradient(135deg,#d9d9d9,#f0f0f0);min-height:280px;position:relative}
+.fx .fimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fx .tx{padding:36px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.shopban{max-width:100%;border-radius:12px;margin-top:18px}
+.cta2{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(120deg,#D7282F,#8c1214);color:#fff;padding:56px 40px}
+.cta2>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cta2::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.6),rgba(0,0,0,.1));z-index:1}
+.cta2 .in{position:relative;z-index:2;max-width:560px}
+.cta2 .btn{background:#fff;color:var(--red)}
+footer{background:#fff;border-top:1px solid var(--line)}
+footer .fgrid{display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr;gap:24px}
+footer .fgrid b{display:block;margin-bottom:8px}
+footer .fgrid a{display:block;text-decoration:none;color:var(--grey);padding:3px 0}
+footer .hs{background:var(--soft);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:center}
+footer .hs img{height:40px}
+footer .soc{display:flex;gap:12px;margin-top:12px}
+footer .soc img{height:28px}
+footer .legal{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;padding-top:18px;border-top:1px solid var(--line)}
+footer .legal a{color:var(--mut);text-decoration:none;font-size:.85rem}
+footer .copy{color:var(--mut);font-size:.82rem;margin-top:10px}
+@media (max-width:900px){.fx,.qrow,footer .fgrid{grid-template-columns:1fr}.hd1 .row{flex-wrap:wrap;height:auto;padding:10px 20px}.persona{order:3}.util{gap:12px}.hero.photo{min-height:360px}.menurow .menu{display:none}}
+</style>
+</head>
+<body>
+<div id="demo"><div class="wrap row">
+ <span>Illustrative mock-up for discussion. Not the live SingPost site. All names, prices and times are made up.</span>
+ <span class="row" style="gap:8px">
+  <label><input type="checkbox" id="hl" onchange="document.body.classList.toggle('hl',this.checked)"> Highlight new</label>
+  <span class="jm"><button onclick="document.getElementById('jlist').classList.toggle('open')">Demo journeys</button>
+   <div id="jlist">
+    <button onclick="jump('0a')">0a. Sign up once, activate services</button>
+    <button onclick="jump('0b')">0b. Log in, land on dashboard</button>
+    <button onclick="jump('0c')">0c. Switch service with no second login</button>
+    <button onclick="jump('2')">2. First-time send, label-less (My Post)</button>
+    <button onclick="jump('3')">3. SME onboard and bulk ship (My Business Post)</button>
+    <button onclick="jump('4')">4. Cross-border: vPost and send overseas</button>
+    <button onclick="jump('6')">6. Help and case with agent handoff</button>
+   </div></span>
+  <button onclick="location.reload()">Reset</button>
+ </span>
+</div></div>
+<div id="hdr"></div>
+<div id="svc"></div>
+<main id="view"></main>
+<footer id="ftr"></footer>
+<button id="fab" onclick="chatOpen()" aria-label="Open SingPost assistant"></button>
+<section id="chat" hidden aria-label="SingPost assistant">
+ <header><div><b>SingPost assistant</b><small>Demo. Hands you to a person with context.</small></div><button onclick="chatClose()" aria-label="Close chat">&#x2715;</button></header>
+ <div id="cmsgs" aria-live="polite"></div><div id="cchips"></div>
+ <form onsubmit="return chatForm(event)"><input id="cin" placeholder="Type a message" aria-label="Message" autocomplete="off"><button class="btn">Send</button></form>
+</section>
+<div id="ov"><div class="box"><div class="spin"></div><div id="ovt"></div></div></div>
+<div id="srch" role="dialog" aria-label="Search"><button class="x" onclick="closeSearch()" aria-label="Close search">&#x2715;</button><div class="in"><div class="f"><label for="sq">Search</label><input id="sq" placeholder="Search SingPost" onkeydown="if(event.key==='Enter'){closeSearch();soon()}"></div><h3>Popular searches</h3><div class="links" id="pop"></div></div></div>
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const money=n=>'S$'+n.toFixed(2);
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+const I={
+ search:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>',
+ chat:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/></svg>',
+ check:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>'
+};
+const SV={
+ mypost:{n:'My Post',d:'Send and receive personal parcels'},
+ biz:{n:'My Business Post',d:'Ship in bulk, book pickups, manage billing'},
+ shop:{n:'Shop@SingPost',d:'Stamps, packing materials and gifts'},
+ vpost:{n:'vPost',d:'Shop overseas, ship to Singapore'}
+};
+
+const BASE='https://www.singpost.com';
+const A={logo:'/_astro/logo-color.CH4BGVdv.svg',search:'/_astro/search2.BIV1c3Y4.svg',head:'/dam/files/2025-10/headset_1.png',head2:'/dam/files/2025-10/headset.png',
+ trk:'/dam/files/2025-10/icon-track-item.png',calc:'/dam/files/2025-10/icon-calculator.png',loc:'/dam/files/2025-10/icon-location-hour.png',rates:'/dam/files/2025-10/icon-delivery-rates.png',
+ q1:'/dam/files/2025-10/Frame%208067.png',q2:'/dam/files/2025-10/Frame%208068.png',q3:'/dam/files/2025-10/Frame%208069.png',
+ snd:'/dam/files/2025-10/icon_servce_sending_0.png',rcv:'/dam/files/2025-10/icon_service_receiving_0.png',
+ hero:'/dam/files/media/banner/2026-05/banner-2026_05-personal-homepage-hero-desktop_2.jpg',shop:'/dam/files/media/logos/2026-09/Shop-SingPost-banner.png',
+ vp:'/dam/files/media/images/2026-03/img-2026_02-hompage-vpost.jpg',app:'/dam/files/media/images/2026-03/img-2026_02-hompage-mobile_app_0.jpg',cta:'/dam/files/2025-10/img-cta-shipping_1.jpg',
+ fb:'/dam/files/2025-09/ico-facebook.png',ig:'/dam/files/2025-10/ico-instagram.png',li:'/dam/files/2025-09/ico-linkedin.png'};
+const im=(k,alt,c)=>`<img src="${BASE+A[k]}" alt="${alt||''}" class="${c||''}" onerror="this.style.display='none'">`;
+function openSearch(){$('#pop').innerHTML=['track item','Locate Us','smartpac','Popstop','Popstation','Popdrop','Scams'].map(t=>`<a href="#" onclick="closeSearch();${t==='track item'?'focusTrack()':'soon()'};return false">${t}</a>`).join('');$('#srch').classList.add('on');setTimeout(()=>$('#sq').focus(),30);return false}
+function closeSearch(){$('#srch').classList.remove('on')}
+const ORD=[
+ {id:'#1042',to:'Wei Jie Lim',pc:'560123',kg:0.4,svc:'std'},
+ {id:'#1043',to:'Aisha Rahman',pc:'680456',kg:1.2,svc:'std'},
+ {id:'#1044',to:'Daniel Ong',pc:'238801',kg:0.8,svc:'std',issue:'Missing unit number'},
+ {id:'#1045',to:'Priya Nair',pc:'310012',kg:2.1,svc:'exp'},
+ {id:'#1046',to:'Grace Tan',pc:'828801',kg:0.6,svc:'loc'}];
+const PARCELS=[
+ {no:'SP45821390SG',st:'Delivery attempted: recipient not home',act:true},
+ {no:'SP45829981SG',st:'Out for delivery today',act:false},
+ {no:'SP45760012SG',st:'Delivered',act:false}];
+const newBiz=()=>({step:1,verified:false,co:'',uen:'',src:null,plan:'ppu',done:false,stage:'list',pickup:null,notify:true,created:false,orders:ORD.map(o=>({...o,sel:true,fixed:!o.issue}))});
+const S={persona:'personal',user:null,view:'home',p:{},su:null,send:null,biz:newBiz(),xb:{tab:'in',stage:'list',sel:{},dlv:'home',o:{stage:'form',dest:'Malaysia',kg:1,type:'goods',opt:null,desc:'',val:''}},cases:[],cart:0,
+ chat:{open:false,started:false,msgs:[],chips:[],typing:false,steps:[],parcel:null}};
+function price(s,kg){return {std:3.2+0.9*kg,exp:6.5+1.4*kg,loc:2.9+0.8*kg}[s]}
+const SVN={std:'Standard',exp:'Express',loc:'Locker drop-off'};
+const first=()=>S.user?S.user.name.split(' ')[0]:'there';
+function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',2600)}
+const soon=()=>{toast('Not part of this mock-up. Works as on the current singpost.com.');return false};
+function go(v,p={}){S.view=v;S.p=p;render();window.scrollTo(0,0);return false}
+function setPersona(k){S.persona=k;go('home');return false}
+function closeMenus(){document.querySelectorAll('.ddm.open').forEach(e=>e.classList.remove('open'))}
+function toggleDD(id){const e=document.getElementById('dd-'+id);const was=e.classList.contains('open');closeMenus();if(!was)e.classList.add('open');return false}
+document.addEventListener('click',e=>{if(!e.target.closest('.dd'))closeMenus();if(!e.target.closest('.jm'))$('#jlist').classList.remove('open')});
+function sso(key,then){const o=$('#ov');$('#ovt').innerHTML='<b>Opening '+SV[key].n+'</b><p class="mut small" style="margin:6px 0 0">You are already signed in with your SingPost ID. No second login.</p>';o.classList.add('on');setTimeout(()=>{o.classList.remove('on');then()},1100)}
+function ready(key){const u=S.user;if(key==='biz')return u.services.biz&&S.biz.done;return !!u.services[key]}
+function stat(key){if(key==='biz'){if(S.biz.done)return 'Active';return S.user.services.biz?'Finish setup':'Set up'}return S.user.services[key]?'Active':'Activate'}
+function openService(key){
+ if(key==='mypost')go('mypost');
+ else if(key==='biz')go(S.biz.done?'biz':'bizonb');
+ else if(key==='shop')go('shop');
+ else if(key==='vpost')(S.xb.tab='in',go('xb'));
+}
+function switchTo(key){
+ if(!S.user)return go('login');
+ if((key==='mypost'||key==='shop'||key==='vpost')&&!S.user.services[key]){S.user.services[key]=true;toast(SV[key].n+' activated with your SingPost ID. Nothing to fill in.')}
+ sso(key,()=>openService(key));return false}
+function curSvc(){const v=S.view;if(['mypost','send','track','cases'].includes(v))return 'mypost';if(['biz','bizonb','bulk'].includes(v))return 'biz';if(v==='shop')return 'shop';if(v==='xb')return S.xb.tab==='in'?'vpost':'mypost';return null}
+function logout(){S.user=null;S.biz=newBiz();closeMenus();go('home');return false}
+function loginDemo(){S.user={name:'Alex Tan',email:'alex.tan@example.com',services:{mypost:true,biz:false,shop:true,vpost:true}};toast('Signed in. One ID for all four services.');go('mypost')}
+function ensureLogin(){if(!S.user)S.user={name:'Alex Tan',email:'alex.tan@example.com',services:{mypost:true,biz:false,shop:true,vpost:true}}}
+function needLogin(){return '<section class="wrap pg"><div class="panel narrow" style="text-align:center"><h1>Log in to continue</h1><p class="mut">Use your SingPost ID. It works for My Post, My Business Post, Shop@SingPost and vPost.</p><div class="btns" style="justify-content:center"><button class="btn lg" onclick="go(\'login\')">Log in</button><button class="btn ghost lg" onclick="startSignup()">Sign up</button></div></div></section>'}
+
+/* ---------- header / footer ---------- */
+function hdr(){
+ const u=S.user;
+ const P={personal:'Personal',business:'Small Business',enterprise:'Enterprise'};
+ const acct=u?`<span class="dd"><button class="av newbox" onclick="return toggleDD('acct')" aria-haspopup="true"><i>${esc(u.name[0])}</i>${esc(first())}</button>
+  <div class="ddm" id="dd-acct"><div class="hd">Signed in as ${esc(u.email)}</div><div class="hd">Switch service (no second login)</div>
+  ${Object.keys(SV).map(k=>`<button onclick="switchTo('${k}')"><span>${SV[k].n}</span><span class="chip ${stat(k)==='Active'?'ok':'warn'}">${stat(k)}</span></button>`).join('')}
+  <hr><a href="#" onclick="return go('cases')">My cases</a><a href="#" onclick="return logout()">Log out</a></div></span>`
+  :`<button class="btn ghost newbox" onclick="go('login')">Log in</button><button class="btn" onclick="startSignup()">Sign up</button>`;
+ $('#hdr').innerHTML=`
+ <div class="hd1"><div class="wrap row"><a class="logo" href="#" onclick="return go('home')" aria-label="SingPost home"><img src="${BASE+A.logo}" alt="SingPost" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'logotxt',textContent:'SingPost'}))"></a>
+  <nav class="persona" aria-label="Audience">${Object.keys(P).map(k=>`<a href="#" class="${S.persona===k?'on':''}" onclick="return setPersona('${k}')">${P[k]}</a>`).join('')}</nav>
+  <div class="util"><a href="#" onclick="return soon()">${im('head','')}<span class="hide-s">Help &amp; Support</span></a>
+   <span class="dd"><a href="#" onclick="return toggleDD('tools')">Tools &#9662;</a><div class="ddm" id="dd-tools">
+    <a class="ti" href="#" onclick="return focusTrack()">${im('trk','')}Track your item</a><a class="ti" href="#" onclick="return soon()">${im('calc','')}Calculate rates</a><a class="ti" href="#" onclick="return soon()">${im('loc','')}Locate us</a><a class="ti" href="#" onclick="return soon()">${im('rates','')}Check Delivery Rates</a></div></span>
+   <a href="#" onclick="return openSearch()" aria-label="Search">${I.search}</a>
+   <div class="acct">${acct}</div></div></div></div>
+ <div class="menurow"><div class="wrap"><nav class="menu" aria-label="Main">
+   <div class="mi"><a href="#" onclick="return false">Sending</a><div class="sub"><a href="#" onclick="return startSend()">Sending within Singapore</a><a href="#" onclick="return openXB('out')">Sending overseas</a><a href="#" onclick="return soon()">Delivery rates</a><a href="#" onclick="return soon()">Calculate postage</a></div></div>
+   <div class="mi"><a href="#" onclick="return false">Receiving</a><div class="sub"><a href="#" onclick="return soon()">Collection points</a><a href="#" onclick="return soon()">PRIVY</a><a href="#" onclick="return soon()">Mail Retention Service</a><a href="#" onclick="return soon()">Mail Redirection Service</a></div></div>
+   <div class="mi"><a href="#" onclick="return false">Shop</a><div class="sub"><a href="#" onclick="return go('shop')">Shop@SingPost</a><a href="#" onclick="return openXB('in')">vPost</a></div></div>
+   <div class="mi"><a href="#" onclick="return soon()">Pay</a></div>
+   <div class="mi"><a href="#" onclick="return soon()">Document Services</a></div>
+   <div class="mi"><a href="#" onclick="return soon()">Money &amp; Health Insurance</a></div>
+  </nav></div></div>`;
+}
+function svcbar(){
+ if(!S.user){$('#svc').innerHTML='';return}
+ const c=curSvc();
+ $('#svc').innerHTML=`<div class="wrap"><div class="svcbar newbox"><span class="lb">Your SingPost ID</span>${Object.keys(SV).map(k=>`<button class="${c===k?'on':''}" onclick="switchTo('${k}')">${SV[k].n}<small>${stat(k)==='Active'?'':stat(k)}</small></button>`).join('')}<span class="nw">New: one ID, four services</span></div></div>`;
+}
+function ftr(){
+ $('#ftr').innerHTML=`<div class="wrap"><div class="fgrid">
+ <div><b>Personal</b><a href="#" onclick="return startSend()">Domestic</a><a href="#" onclick="return openXB('out')">International</a><a href="#" onclick="return soon()">Delivery Rates</a><a href="#" onclick="return soon()">Calculate Postage</a></div>
+ <div><b>Business</b><a href="#" onclick="return setPersona('business')">Small Business</a><a href="#" onclick="return setPersona('enterprise')">Enterprise</a><a href="#" onclick="return soon()">Property Solutions</a></div>
+ <div><b>Company</b><a href="#" onclick="return soon()">About SingPost</a><a href="#" onclick="return soon()">Media Centre</a><a href="#" onclick="return soon()">Investor Relations</a><a href="#" onclick="return soon()">Careers</a></div>
+ <div class="hs">${im('head2','')}<div><b style="margin:0">Help and Support</b><a href="#" onclick="return soon()">Get Help or get in touch</a><div class="soc">${im('fb','Facebook')}${im('ig','Instagram')}${im('li','LinkedIn')}</div></div></div></div>
+ <div class="legal"><a href="#" onclick="return soon()">Sitemap</a><a href="#" onclick="return soon()">Terms of Use</a><a href="#" onclick="return soon()">Privacy Policy</a><a href="#" onclick="return soon()">Online Security &amp; You</a><a href="#" onclick="return soon()">Publications</a></div>
+ <div class="copy">Illustrative mock-up. Layout follows singpost.com; images load from the live site when online.</div></div>`;
+}
+
+/* ---------- home ---------- */
+function focusTrack(){if(S.view!=='home'||S.persona!=='personal'){S.persona='personal';go('home')}setTimeout(()=>{const e=document.getElementById('trk');if(e)e.focus()},50);return false}
+function doTrack(){const n=val('trk')||'SP45821390SG';go('track',{no:n.toUpperCase()})}
+function parcelList(){return PARCELS.map(p=>`<div class="prow"><div><b>${p.no}</b><span class="${p.act?'chip warn':'chip'}">${p.st}</span></div><div>${p.act?`<button class="btn" onclick="fixParcel()">Fix this in chat</button> `:''}<button class="btn ghost" onclick="go('track',{no:'${p.no}'})">Track</button></div></div>`).join('')}
+function fixParcel(){chatOpen();S.chat.chips=[];userSay("Where's my parcel?")}
+const V={};
+V.home=()=>S.persona==='business'?homeBiz():S.persona==='enterprise'?homeEnt():homePersonal();
+function homePersonal(){
+ const mine=S.user?`<section class="sec"><div class="wrap"><div class="row" style="justify-content:space-between"><h2>Your parcels<span class="nw">New</span></h2><a class="lnk" href="#" onclick="return go('mypost')">Open My Post</a></div><div class="newbox">${parcelList()}</div></div></section>`:'';
+ return `<section class="hero photo">${im('hero','','bg')}<div class="wrap"><h1>Connecting Communities with Trusted Delivery</h1>
+  <div class="trackcard"><label for="trk">Track your item</label><div class="trow"><input id="trk" placeholder="Enter tracking number" onkeydown="if(event.key==='Enter')doTrack()"><button class="btn" onclick="doTrack()">Track</button></div></div></div></section>
+ <div class="wrap"><div class="qrow"><a class="qtile" href="#" onclick="return soon()">${im('q1','')}Calculate Rates</a><a class="qtile" href="#" onclick="return soon()">${im('q2','')}Locate Us</a><a class="qtile" href="#" onclick="return soon()">${im('q3','')}Find a postal code</a></div></div>
+ ${mine}
+ <section class="sec"><div class="wrap grid2 svc2">
+  <div class="card">${im('snd','')}<h2>Sending</h2><p>Sending parcels within Singapore? SingPost makes it easy and efficient! Whether you're a business owner or sending a gift to a loved one, our services are designed to meet your needs with precision and care.</p>
+   <div class="links"><a href="#" onclick="return startSend()">Sending within Singapore</a><a href="#" onclick="return openXB('out')">Sending Overseas</a></div></div>
+  <div class="card">${im('rcv','')}<h2>Receiving</h2><p>Manage your mail securely in Singapore. Get flexible solutions for relocating, travel, or missed deliveries with our mail management services.</p>
+   <div class="links"><a href="#" onclick="return soon()">Collection points</a><a href="#" onclick="return soon()">PRIVY</a><a href="#" onclick="return soon()">Mail Retention Service</a><a href="#" onclick="return soon()">Mail Redirection Service</a></div></div></div></section>
+ <section class="sec" style="padding-top:0"><div class="wrap"><div class="band"><div><h2>Support &amp; Service Updates</h2><span class="mut small">Ask the assistant to change a delivery, or talk to a person with the details already shared.<span class="nw">New</span></span></div><div class="links" style="margin:0"><a href="#" onclick="return soon()">Help &amp; Support</a><a href="#" onclick="return soon()">Services Updates</a><a href="#" onclick="return chatOpen()">Chat with the assistant</a></div></div></div></section>
+ <section class="sec alt"><div class="wrap"><h2>In The Shop</h2><p style="max-width:760px">From milestones to corporate gifts, explore our extensive range of collectible stamps, both national and personalised, as well as premium gifts. Be sure to check out our selection of packaging materials for all your delivery needs.</p>
+  <div class="links"><a href="#" onclick="return go('shop')">Shop online</a><a href="#" onclick="return go('shop')">Buy packing material</a><a href="#" onclick="return go('shop')">Discover unique and collectible stamps</a><a href="#" onclick="return go('shop')">Find gifts and souvenirs</a></div>${im('shop','Shop@SingPost','shopban')}</div></section>
+ <section class="sec"><div class="wrap"><div class="fx"><div class="fimg">${im('vp','')}</div><div class="tx"><h2>Shop from anywhere with vPost</h2><p>Experience the convenience of global shopping from the comfort of your home with vPost. Sign up for your free overseas addresses and shop your favourite brands from anywhere in the world. Begin your international shopping journey today!</p><button class="btn" onclick="openXB('in')">Visit vPost</button></div></div></div></section>
+ <section class="sec" style="padding-top:0"><div class="wrap"><div class="fx"><div class="tx"><h2>SingPost Mobile App</h2><p>Manage deliveries on the go! Track parcels in real-time, find postage rates, and locate your nearest posting box or locker. Experience seamless shipping at your fingertips.</p><button class="btn" onclick="soon()">Learn more</button></div><div class="fimg">${im('app','')}</div></div></div></section>
+ <section class="sec" style="padding-top:0"><div class="wrap"><div class="cta2">${im('cta','')}<div class="in"><h2>Starting Out: SingPost Has Solutions for You</h2><p>With aspirations of becoming an entrepreneur, you might be considering how to import or export your products as you begin your journey. Explore our Business Solutions to help you bring your vision to life simply, affordably, and efficiently.</p><button class="btn" onclick="setPersona('business')">Explore Business Solutions</button></div></div></div></section>`;
+}
+function homeBiz(){
+ const u=S.user;let cta;
+ if(!u)cta=`<button class="btn lg" style="background:#fff;color:var(--red)" onclick="startSignup(['biz'])">Sign up for My Business Post</button> <button class="btn ghost lg" style="color:#fff;border-color:#fff" onclick="go('login')">Log in</button>`;
+ else if(ready('biz'))cta=`<button class="btn lg" style="background:#fff;color:var(--red)" onclick="switchTo('biz')">Open My Business Post</button>`;
+ else cta=`<button class="btn lg" style="background:#fff;color:var(--red)" onclick="switchTo('biz')">${S.user.services.biz?'Finish setting up':'Set up My Business Post'}</button>`;
+ return `<section class="hero"><div class="wrap"><h1>Ship more, with less admin</h1><p>Connect your store, ship orders in bulk, book pickups and see one bill. Use the same SingPost ID you use for personal parcels.</p><div class="btns">${cta}</div></div></section>
+ <section class="sec"><div class="wrap grid3">
+  <div class="card"><h3>Connect your store</h3><p>Link Shopify, upload a CSV or use an API. Orders arrive ready to ship.</p></div>
+  <div class="card"><h3>Ship in bulk</h3><p>Compare services per order, fix address problems before printing, create all labels at once.</p></div>
+  <div class="card"><h3>Pickups and billing</h3><p>Book a pickup for the whole batch. Pay as you go, or apply for a credit account.</p></div></div></section>`;
+}
+function homeEnt(){return `<section class="hero"><div class="wrap"><h1>Delivery at enterprise scale</h1><p>API and bulk shipment creation, status feeds and proof of delivery for corporate customers.</p><div class="btns"><button class="btn lg" style="background:#fff;color:var(--red)" onclick="soon()">Talk to our team</button></div></div></section>
+ <section class="sec"><div class="wrap grid3"><div class="card"><h3>API integration</h3><p>Create shipments and receive status events programmatically.</p></div><div class="card"><h3>Bulk creation</h3><p>Upload large batches and track them in one place.</p></div><div class="card"><h3>Reports and invoices</h3><p>Pickup summaries, transaction reports and billing.</p></div></div><p class="mut small" style="margin-top:14px">Enterprise screens are a placeholder in this mock-up.</p></section>`;
+}
+
+/* ---------- auth ---------- */
+V.login=()=>`<section class="wrap auth"><div class="authcard"><h1>Log in with your SingPost ID</h1><p class="mut">One login for My Post, My Business Post, Shop@SingPost and vPost.</p>
+ <div class="f"><label for="em">Email</label><input id="em" type="email" value="alex.tan@example.com" autocomplete="username"></div>
+ <div class="f"><label for="pw">Password</label><input id="pw" type="password" value="demo-password" autocomplete="current-password"></div>
+ <div class="btns" style="align-items:center"><button class="btn lg" onclick="loginDemo()">Log in</button><a class="lnk" href="#" onclick="return soon()">Forgot password?</a></div>
+ <p class="mut small" style="margin-top:18px">New to SingPost? <a href="#" onclick="return startSignup()">Sign up</a></p></div>
+ <aside class="authside"><h2>What one ID opens</h2><ul class="svcs">${Object.keys(SV).map(k=>`<li><b>${SV[k].n}</b><span>${SV[k].d}</span></li>`).join('')}</ul>
+ <div class="note newbox"><b>Already have a My Post or My Business Post login?</b> Log in once with it and we link it to your SingPost ID, so you stop managing separate passwords.</div></aside></section>`;
+function startSignup(pre){S.su={step:1,name:'',email:'',mobile:'',pw:'',err:'',co:'',uen:'',pc:'',sel:{mypost:true,biz:false,shop:false,vpost:false},cty:{US:true,UK:true,CN:false,AU:false}};(pre||[]).forEach(k=>S.su.sel[k]=true);go('signup');return false}
+function suToggle(k){S.su.sel[k]=!S.su.sel[k];render()}
+function suCty(k){S.su.cty[k]=!S.su.cty[k];render()}
+function suBack(){S.su.step--;S.su.err='';render()}
+function suNext(){const s=S.su;
+ if(s.step===1){s.name=val('su-name');s.email=val('su-email');s.mobile=val('su-mobile');s.pw=val('su-pw');
+  if(!s.name||!/@/.test(s.email)||s.pw.length<8){s.err='Enter your name, a valid email and a password of at least 8 characters.';return render()}}
+ if(s.step===2&&!Object.values(s.sel).some(Boolean)){s.err='Choose at least one service. You can add the others later with one tap.';return render()}
+ if(s.step===3){s.co=val('su-co')||s.co;s.uen=val('su-uen')||s.uen;s.pc=val('su-pc')||s.pc;
+  if(s.sel.biz&&(!s.co||!s.uen)){s.err='Enter your company name and UEN to set up My Business Post.';return render()}
+  S.user={name:s.name,email:s.email,services:{...s.sel}};
+  if(s.sel.biz){S.biz=newBiz();S.biz.verified=true;S.biz.co=s.co;S.biz.uen=s.uen;S.biz.step=2}}
+ s.err='';s.step++;render()}
+function suFinish(){const k=Object.keys(SV).find(x=>S.su.sel[x]);sso(k,()=>openService(k))}
+V.signup=()=>{const s=S.su;const st=['Your details','Choose services','Set up','Done'];
+ const stepper=`<div class="steps">${st.map((t,i)=>`<span class="${i+1===s.step?'on':i+1<s.step?'dn':''}">${i+1}. ${t}</span>`).join('')}</div>`;
+ const err=s.err?`<div class="err" role="alert">${s.err}</div>`:'';let body='';
+ if(s.step===1)body=`<h1>Create your SingPost ID</h1><p class="mut">Sign up once. Use it across all SingPost services.</p>${err}
+  <div class="f"><label for="su-name">Full name</label><input id="su-name" value="${esc(s.name)}" autocomplete="name"></div>
+  <div class="f"><label for="su-email">Email</label><input id="su-email" type="email" value="${esc(s.email)}" autocomplete="email"></div>
+  <div class="f"><label for="su-mobile">Mobile (for delivery updates on WhatsApp or SMS)</label><input id="su-mobile" value="${esc(s.mobile)}" autocomplete="tel"></div>
+  <div class="f"><label for="su-pw">Password</label><input id="su-pw" type="password" value="${esc(s.pw)}" autocomplete="new-password"><span class="mut small">At least 8 characters.</span></div>`;
+ if(s.step===2)body=`<h1>What do you want to do?</h1><p class="mut">Pick what you need now. Each one is switched on under the same ID, and you can add more later.</p>${err}
+  ${Object.keys(SV).map(k=>`<button class="opt ${s.sel[k]?'on':''}" onclick="suToggle('${k}')" aria-pressed="${!!s.sel[k]}"><span class="mk">${s.sel[k]?I.check:''}</span><span><b>${SV[k].n}</b><span class="d">${SV[k].d}</span></span></button>`).join('')}`;
+ if(s.step===3){body=`<h1>Just what each service needs</h1><p class="mut">We only ask for what is specific to the services you chose.</p>${err}`;
+  if(s.sel.mypost||s.sel.shop)body+=`<div class="f"><label for="su-pc">Home postal code (saved as your default address)</label><input id="su-pc" value="${esc(s.pc)}" inputmode="numeric" maxlength="6"></div>`;
+  if(s.sel.biz)body+=`<div class="f"><label for="su-co">Company name</label><input id="su-co" value="${esc(s.co)}"></div><div class="f"><label for="su-uen">UEN</label><input id="su-uen" value="${esc(s.uen)}"></div>`;
+  if(s.sel.vpost)body+=`<div class="f"><label>Free overseas addresses</label><div class="links" style="margin:0">${Object.keys(s.cty).map(k=>`<a href="#" style="${s.cty[k]?'background:var(--red);color:#fff;border-color:var(--red)':''}" onclick="suCty('${k}');return false">${{US:'United States',UK:'United Kingdom',CN:'China',AU:'Australia'}[k]}</a>`).join('')}</div><span class="mut small">Illustrative list. Confirm current vPost countries before client use.</span></div>`;
+  if(!(s.sel.mypost||s.sel.shop||s.sel.biz||s.sel.vpost))body+='<p>Nothing else to set up.</p>'}
+ if(s.step===4)return `<section class="wrap pg"><div class="panel narrow">${stepper}<div class="okbox">${I.check} You are signed in as ${esc(S.user.name)}</div><h1>You are all set</h1><ul class="svcs">${Object.keys(SV).filter(k=>S.su.sel[k]).map(k=>`<li><b>${SV[k].n}</b><span>${k==='biz'?'Company details saved. Connect your store next.':'Active now'}</span></li>`).join('')}</ul><p class="mut">Other services appear in the switcher at the top. One tap activates them with no new form.</p><button class="btn lg" onclick="suFinish()">Go to ${SV[Object.keys(SV).find(x=>S.su.sel[x])].n}</button></div></section>`;
+ const nav=`<div class="btns">${s.step>1?'<button class="btn ghost" onclick="suBack()">Back</button>':''}<button class="btn lg" onclick="suNext()">${s.step===3?'Create my SingPost ID':'Continue'}</button></div>`;
+ return `<section class="wrap pg"><div class="panel narrow">${stepper}${body}${nav}</div></section>`};
+
+/* ---------- My Post ---------- */
+V.mypost=()=>!S.user?needLogin():`<section class="wrap pg"><div class="ph"><h1>My Post</h1><p class="mut">Hi ${esc(first())}. Send, track and manage your parcels.</p></div>
+ <div class="acts"><button class="act" onclick="startSend()"><b>Send a parcel</b><span>3 steps, no label to print</span></button><button class="act" onclick="focusTrackIn()"><b>Track a parcel</b><span>With delivery options</span></button><button class="act" onclick="openXB('out')"><b>Send overseas</b><span>Compare services and duties</span></button><button class="act" onclick="chatOpen()"><b>Get help</b><span>Chat, then a person if needed</span></button></div>
+ <h2>Your parcels</h2><div class="newbox">${parcelList()}</div><h2 style="margin-top:28px">Your cases</h2>${casesMini()}</section>`;
+function focusTrackIn(){go('track',{no:'SP45821390SG'})}
+function casesMini(){return S.cases.length?S.cases.map(c=>`<div class="prow"><div><b>${c.id}</b><span class="mut small">${c.sum}</span></div><button class="btn ghost" onclick="go('cases')">View</button></div>`).join(''):'<div class="prow"><span class="mut">No open cases. Ask the assistant and it can create one with your details already attached.</span><button class="btn ghost" onclick="chatOpen()">Ask the assistant</button></div>'}
+function tlHtml(ev){return `<ul class="tl">${ev.map(e=>`<li class="${e.s}"><b>${e.t}</b><span>${e.w}</span></li>`).join('')}</ul>`}
+V.track=()=>{const no=S.p.no||'SP45821390SG';const act=no==='SP45821390SG'||!PARCELS.some(p=>p.no===no);
+ const ev=act?[{s:'done',t:'Item received by SingPost',w:'Mon, 9:40 am'},{s:'done',t:'Sorted at processing centre',w:'Tue, 6:10 am'},{s:'done',t:'Out for delivery',w:'Tue, 9:05 am'},{s:'now',t:'Delivery attempted: recipient not home',w:'Tue, 2:14 pm'}]:[{s:'done',t:'Item received by SingPost',w:'Mon, 9:40 am'},{s:'done',t:'Sorted at processing centre',w:'Tue, 6:10 am'},{s:'now',t:'Out for delivery',w:'Tue, 9:05 am'}];
+ return `<section class="wrap pg"><div class="grid2" style="align-items:start"><div class="panel"><h1>${esc(no)}</h1>${act?'<span class="chip warn">Action needed</span>':'<span class="chip ok">On its way</span>'}<div style="margin-top:20px">${tlHtml(ev)}</div></div>
+ <div class="panel newbox"><h2>${act?'Sort this out now':'Delivery options'}</h2><p class="mut">${act?'No call needed. Pick what suits you and we update the delivery team and notify you.':'You can still change how it arrives.'}</p>
+ ${['Re-deliver tomorrow','Send to a locker','Collect at post office','Talk to a person'].map(t=>`<button class="opt" onclick="chatAct('${t}')"><b>${t}</b></button>`).join('')}</div></div></section>`};
+function chatAct(t){chatOpen();S.chat.chips=[];userSay(t)}
+
+/* ---------- Journey 2: send ---------- */
+function startSend(){ensureLogin();S.send={step:1,name:'',mobile:'',pc:'',unit:'',size:'S',svc:'std',pay:'paynow',notify:true,code:'SP-'+Math.random().toString(36).slice(2,8).toUpperCase(),err:''};return go('send')}
+const SZ={S:['Small',0.5,'up to 0.5 kg, fits an envelope or pouch'],M:['Medium',2,'up to 2 kg, shoebox size'],L:['Large',5,'up to 5 kg, small carton']};
+function sendPC(){const v=val('s-pc');const e=document.getElementById('pcfill');if(e)e.innerHTML=/^\d{6}$/.test(v)?'<span class="chip ok">Address filled from postal code (illustrative): Blk 12 Example Avenue</span>':''}
+function sendNext(){const s=S.send;
+ if(s.step===1){s.name=val('s-name');s.mobile=val('s-mob');s.pc=val('s-pc');s.unit=val('s-unit');
+  if(!s.name||!/^\d{6}$/.test(s.pc)){s.err='Enter the recipient name and a 6-digit postal code. We fill in the rest.';return render()}}
+ s.err='';s.step++;render();window.scrollTo(0,0)}
+function sendBack(){S.send.step--;render()}
+V.send=()=>{if(!S.user)return needLogin();const s=S.send;const kg=SZ[s.size][1];
+ const stepper=`<div class="steps">${['From and to','Service','Pay','Drop off'].map((t,i)=>`<span class="${i+1===s.step?'on':i+1<s.step?'dn':''}">${i+1}. ${t}</span>`).join('')}</div>`;let b='';
+ if(s.step===1)b=`<h1>Send a parcel</h1><p class="mut">No label to print. You get a code to scan at drop-off.</p>${s.err?`<div class="err" role="alert">${s.err}</div>`:''}
+  <div class="addr newbox" style="margin-bottom:16px"><b>From: ${esc(S.user.name)}</b><span>Saved address: Blk 123 Example Street #05-67 (change)</span></div>
+  <div class="f"><label for="s-name">Recipient name</label><input id="s-name" value="${esc(s.name)}"></div>
+  <div class="f"><label for="s-mob">Recipient mobile (so they get delivery updates)</label><input id="s-mob" value="${esc(s.mobile)}"></div>
+  <div class="grid2"><div class="f"><label for="s-pc">Postal code</label><input id="s-pc" value="${esc(s.pc)}" inputmode="numeric" maxlength="6" oninput="sendPC()"></div><div class="f"><label for="s-unit">Unit number</label><input id="s-unit" value="${esc(s.unit)}"></div></div><div id="pcfill" style="margin:-6px 0 14px"></div>
+  <div class="f"><label>Parcel size</label>${Object.keys(SZ).map(k=>`<button class="opt ${s.size===k?'on':''}" onclick="S.send.size='${k}';render()"><span class="mk">${s.size===k?I.check:''}</span><span><b>${SZ[k][0]}</b><span class="d">${SZ[k][2]}</span></span></button>`).join('')}</div>`;
+ if(s.step===2)b=`<h1>Choose a service</h1><p class="mut">Illustrative prices for a ${SZ[s.size][0].toLowerCase()} parcel to ${esc(s.pc)}.</p>
+  ${[['std','Standard','2 to 3 working days'],['exp','Express','Next working day'],['loc','Locker drop-off','2 to 3 working days, recipient collects from a locker']].map(([k,n,d])=>`<button class="opt ${s.svc===k?'on':''}" onclick="S.send.svc='${k}';render()"><span class="mk">${s.svc===k?I.check:''}</span><span><b>${n}</b><span class="d">${d}</span></span><span class="pr">${money(price(k,kg))}</span></button>`).join('')}
+  <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" ${s.notify?'checked':''} onchange="S.send.notify=this.checked"> Tell the recipient by WhatsApp or SMS that a parcel is coming<span class="nw">New</span></label>`;
+ if(s.step===3){const t=price(s.svc,kg);b=`<h1>Review and pay</h1><div class="addr" style="margin-bottom:16px"><b>${esc(s.name)}</b><span>${esc(s.pc)} ${esc(s.unit)} &middot; ${SZ[s.size][0]} &middot; ${SVN[s.svc]}</span></div>
+  ${[['paynow','PayNow\u2020'],['card','Credit or debit card']].map(([k,n])=>`<button class="opt ${s.pay===k?'on':''}" onclick="S.send.pay='${k}';render()"><span class="mk">${s.pay===k?I.check:''}</span><b>${n}</b></button>`).join('')}
+  <p class="mut small">\u2020 Payment methods are illustrative. PayNow compatibility with the payment gateway is still to be confirmed.</p><h2>Total ${money(t)}</h2>`}
+ if(s.step===4)return `<section class="wrap pg"><div class="panel narrow">${stepper}<div class="okbox">${I.check} Paid ${money(price(s.svc,kg))}. Booking confirmed</div><h1>Take it to a drop-off point</h1>
+  <div class="qrbox newbox"><div>${qr(s.code)}</div><div><p class="mut" style="margin:0">Show this at drop-off. We print the label there.</p><div class="code">${s.code}</div><p class="mut small" style="margin-top:8px">Illustrative QR. Valid for 3 days.</p></div></div>
+  <h3 style="margin-top:22px">Nearest drop-off points (illustrative)</h3><div class="prow"><b>Locker A</b><span class="mut">0.4 km &middot; open 24 hours</span></div><div class="prow"><b>Post office B</b><span class="mut">0.9 km &middot; closes 5 pm</span></div>
+  <p>${s.notify?'We will message the recipient once you drop it off.':'The recipient will not be messaged.'}</p><div class="btns"><button class="btn" onclick="go('track',{no:'SP45821390SG'})">Track this parcel</button><button class="btn ghost" onclick="go('mypost')">Back to My Post</button></div></div></section>`;
+ const nav=`<div class="btns">${s.step>1?'<button class="btn ghost" onclick="sendBack()">Back</button>':''}<button class="btn lg" onclick="sendNext()">${s.step===3?'Pay '+money(price(s.svc,kg)):'Continue'}</button></div>`;
+ return `<section class="wrap pg"><div class="panel narrow">${stepper}${b}${nav}</div></section>`};
+function qr(seed){let s=0;for(const c of seed)s=(s*31+c.charCodeAt(0))>>>0;const N=21,u=6;let r='';const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296};
+ const fin=(x,y)=>`<rect x="${x*u}" y="${y*u}" width="${7*u}" height="${7*u}" fill="#111"/><rect x="${(x+1)*u}" y="${(y+1)*u}" width="${5*u}" height="${5*u}" fill="#fff"/><rect x="${(x+2)*u}" y="${(y+2)*u}" width="${3*u}" height="${3*u}" fill="#111"/>`;
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){const f=(x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12);if(!f&&rnd()>.5)r+=`<rect x="${x*u}" y="${y*u}" width="${u}" height="${u}" fill="#111"/>`}
+ return `<svg viewBox="0 0 ${N*u} ${N*u}" width="150" height="150" style="background:#fff;padding:6px;border-radius:8px" role="img" aria-label="Illustrative QR code">${r}${fin(0,0)}${fin(14,0)}${fin(0,14)}</svg>`}
+
+/* ---------- Journey 3: My Business Post ---------- */
+function bizLookup(){const u=val('uen');if(!u){S.biz.err='Enter your UEN.';return render()}S.biz.err='';S.biz.uen=u;S.biz.co='Sweet Crumbs Pte. Ltd.';S.biz.verified=true;S.user.services.biz=true;render()}
+function bizSrc(k){S.biz.src=k;render()}
+function bizNext(){const b=S.biz;if(b.step===4){b.done=true;S.user.services.biz=true;b.stage='list';return go('bulk')}b.step++;render();window.scrollTo(0,0)}
+function bizBack(){S.biz.step--;render()}
+V.bizonb=()=>{if(!S.user)return needLogin();const b=S.biz;
+ const stepper=`<div class="steps">${['Verify business','Connect orders','Billing','Ready'].map((t,i)=>`<span class="${i+1===b.step?'on':i+1<b.step?'dn':''}">${i+1}. ${t}</span>`).join('')}</div>`;let body='',ok=true;
+ if(b.step===1){ok=b.verified;body=`<h1>Set up My Business Post</h1><p class="mut">You are signed in with your SingPost ID, so there is no new account to create. We only verify the business.</p>${b.err?`<div class="err" role="alert">${b.err}</div>`:''}
+  ${b.verified?`<div class="okbox">${I.check} Business verified</div><div class="addr"><b>${esc(b.co)}</b><span>UEN ${esc(b.uen)} (illustrative lookup)</span></div>`:`<div class="f"><label for="uen">UEN</label><input id="uen" placeholder="Enter your company UEN"></div><button class="btn" onclick="bizLookup()">Look up my business</button><p class="mut small" style="margin-top:10px">We fill in company name and registered address from the UEN (illustrative).</p>`}`}
+ if(b.step===2){ok=!!b.src;body=`<h1>Bring in your orders</h1><p class="mut">Choose how orders reach SingPost. You can add more later.</p>
+  ${[['shopify','Connect Shopify','One-tap plugin. Orders sync automatically.'],['csv','Upload a CSV','Download the template, fill it in, upload.'],['api','Use the API','For teams with their own system.']].map(([k,n,d])=>`<button class="opt ${b.src===k?'on':''}" onclick="bizSrc('${k}')"><span class="mk">${b.src===k?I.check:''}</span><span><b>${n}</b><span class="d">${d}</span></span></button>`).join('')}
+  ${b.src?`<div class="okbox">${I.check} ${b.src==='api'?'API key created (illustrative). 5 sample orders loaded.':'5 orders imported (illustrative).'}</div>`:''}`}
+ if(b.step===3)body=`<h1>How do you want to pay?</h1><p class="mut">Start now. Change this any time.</p>${[['ppu','Pay as you go','Pay per batch by card or PayNow\u2020. No approval needed.'],['credit','Apply for a credit account','Monthly invoice. Subject to approval, you can ship pay-as-you-go meanwhile.']].map(([k,n,d])=>`<button class="opt ${b.plan===k?'on':''}" onclick="S.biz.plan='${k}';render()"><span class="mk">${b.plan===k?I.check:''}</span><span><b>${n}</b><span class="d">${d}</span></span></button>`).join('')}<p class="mut small">\u2020 PayNow compatibility is still to be confirmed.</p>`;
+ if(b.step===4)body=`<div class="okbox">${I.check} You are ready to ship</div><h1>5 orders are waiting</h1><p class="mut">One needs a quick fix. We flag it before any label is printed.</p>`;
+ const nav=`<div class="btns">${b.step>1?'<button class="btn ghost" onclick="bizBack()">Back</button>':''}<button class="btn lg" ${ok?'':'disabled'} onclick="bizNext()">${b.step===4?'Ship my orders':'Continue'}</button></div>`;
+ return `<section class="wrap pg"><div class="panel narrow">${stepper}${body}${nav}</div></section>`};
+function bulkSvc(i,v){S.biz.orders[i].svc=v;render()}
+function bulkSel(i,c){S.biz.orders[i].sel=c;render()}
+function bulkFix(i){const u=val('fx'+i);if(!u){toast('Enter the unit number.');return}S.biz.orders[i].fixed=true;S.biz.orders[i].unit=u;render()}
+function bulkCreate(){S.biz.stage='created';render();window.scrollTo(0,0)}
+function bulkPickup(){S.biz.pickup=val('pk-d')+', '+val('pk-w');render()}
+V.bulk=()=>{if(!S.user)return needLogin();const b=S.biz;if(!b.done){b.step=1;return V.bizonb()}
+ const sel=b.orders.filter(o=>o.sel&&o.fixed);const tot=sel.reduce((a,o)=>a+price(o.svc,o.kg),0);
+ if(b.stage==='created')return `<section class="wrap pg"><div class="panel narrow"><div class="okbox">${I.check} ${sel.length} labels created. ${b.notify?'Recipients will be notified.':''}</div><h1>Book one pickup for the batch</h1>
+  ${b.pickup?`<div class="okbox">${I.check} Pickup booked: ${esc(b.pickup)}. Sweet Crumbs Pte. Ltd.</div>`:`<div class="grid2"><div class="f"><label for="pk-d">Day</label><select id="pk-d"><option>Tomorrow</option><option>Day after tomorrow</option></select></div><div class="f"><label for="pk-w">Window</label><select id="pk-w"><option>9 am to 1 pm</option><option>1 pm to 5 pm</option></select></div></div><button class="btn lg" onclick="bulkPickup()">Book pickup</button>`}
+  <h3 style="margin-top:24px">Labels</h3>${sel.map(o=>`<div class="prow"><span><b>${o.id} &middot; ${esc(o.to)}</b><span class="mut small">${SVN[o.svc]} &middot; ${money(price(o.svc,o.kg))}</span></span><span class="chip ok">Label ready</span></div>`).join('')}
+  <div class="btns"><button class="btn" onclick="toast('Label PDF download is not part of this mock-up.')">Download all labels (PDF)</button><button class="btn ghost" onclick="S.biz.stage='list';S.biz.pickup=null;go('biz')">Back to My Business Post</button></div></div></section>`;
+ return `<section class="wrap pg"><div class="ph"><h1>Ship orders</h1><p class="mut">Orders imported from ${b.src==='csv'?'your CSV':b.src==='api'?'your API':'Shopify'}. Rates update as you change a service.</p></div>
+ <div class="panel newbox" style="padding:12px"><table class="tbl"><thead><tr><th></th><th>Order</th><th>Recipient</th><th>Postal code</th><th>Weight</th><th>Service</th><th>Price</th><th>Check</th></tr></thead><tbody>
+ ${b.orders.map((o,i)=>`<tr><td><input type="checkbox" aria-label="Select ${o.id}" ${o.sel&&o.fixed?'checked':''} ${o.fixed?'':'disabled'} onchange="bulkSel(${i},this.checked)"></td><td>${o.id}</td><td>${esc(o.to)}</td><td>${o.pc}</td><td>${o.kg} kg</td>
+ <td><select aria-label="Service for ${o.id}" onchange="bulkSvc(${i},this.value)">${Object.keys(SVN).map(k=>`<option value="${k}" ${o.svc===k?'selected':''}>${SVN[k]}</option>`).join('')}</select></td><td>${money(price(o.svc,o.kg))}</td>
+ <td>${o.fixed?'<span class="chip ok">Ready</span>':`<span class="chip warn">${o.issue}</span><div style="display:flex;gap:6px;margin-top:6px"><input type="text" id="fx${i}" placeholder="#01-23" aria-label="Unit number" style="width:90px"><button class="btn" style="padding:6px 12px" onclick="bulkFix(${i})">Fix</button></div>`}</td></tr>`).join('')}</tbody></table></div>
+ <div class="bar"><span><b>${sel.length} orders</b> &middot; ${money(tot)} &middot; <label><input type="checkbox" ${b.notify?'checked':''} onchange="S.biz.notify=this.checked"> Notify recipients by WhatsApp or SMS</label></span><button class="btn lg" ${sel.length?'':'disabled'} onclick="bulkCreate()">Create ${sel.length} labels</button></div>
+ <p class="mut small">Illustrative orders, rates and checks.</p></section>`};
+V.biz=()=>{if(!S.user)return needLogin();if(!S.biz.done)return V.bizonb();const left=S.biz.orders.filter(o=>!o.fixed).length;
+ return `<section class="wrap pg"><div class="ph"><h1>My Business Post</h1><p class="mut">${esc(S.biz.co||'Your business')}. Signed in as ${esc(first())}.</p></div>
+ <div class="acts"><button class="act" onclick="go('bulk')"><b>Ship orders</b><span>${S.biz.orders.length} waiting${left?`, ${left} need a fix`:''}</span></button><button class="act" onclick="go('bulk')"><b>Book a pickup</b><span>For a whole batch</span></button><button class="act" onclick="openXB('out')"><b>Send overseas</b><span>Compare services and duties</span></button><button class="act" onclick="soon()"><b>Billing</b><span>${S.biz.plan==='credit'?'Credit account applied':'Pay as you go'}</span></button></div>
+ <h2>Today</h2><div class="prow"><span><b>Orders ready to ship</b><span class="mut small">Imported from ${S.biz.src==='csv'?'CSV':S.biz.src==='api'?'API':'Shopify'}</span></span><button class="btn" onclick="go('bulk')">Review and ship</button></div></section>`};
+
+/* ---------- Journey 4: cross-border ---------- */
+function openXB(tab){S.xb.tab=tab;S.xb.stage='list';S.xb.o.stage='form';return go('xb')}
+const PK=[{id:'p1',m:'US online store A',d:'Sneakers',kg:1.1,v:120,st:'arrived'},{id:'p2',m:'US online store B',d:'Books (3)',kg:1.6,v:60,st:'arrived'},{id:'p3',m:'UK online store C',d:'Jacket',kg:0.9,v:95,st:'transit'}];
+const ADR={US:['United States','1234 Example Way, Suite SG-5821','Wilmington, DE 19801'],UK:['United Kingdom','Unit 7 Example Park, SG5821','Reading RG1 1AA'],CN:['China','Room 5821, Example Building','Shenzhen 518000'],AU:['Australia','5821 Example Road','Sydney NSW 2000']};
+const XT={tab:null};
+function xbSel(id){S.xb.sel[id]=!S.xb.sel[id];render()}
+function copyAddr(k){toast(ADR[k][0]+' address copied (illustrative).')}
+function xbCalc(){const ps=PK.filter(p=>S.xb.sel[p.id]);const kg=ps.reduce((a,p)=>a+p.kg,0);const val_=ps.reduce((a,p)=>a+p.v,0);const ship=12+6*kg;const gst=val_*0.09;const adj={home:0,locker:-1,po:-1}[S.xb.dlv];return {ps,kg,ship,gst,adj,tot:ship+gst+adj}}
+function xbOpt(k){S.xb.dlv=k;render()}
+function xbGo(s){S.xb.stage=s;render();window.scrollTo(0,0)}
+function xoSet(k,v){S.xb.o[k]=v;render()}
+function xoRead(){const o=S.xb.o;o.dest=val('xo-d')||o.dest;o.kg=parseFloat(val('xo-k'))||1;o.type=val('xo-t')||o.type;o.stage='opts';render()}
+function xoDecl(){S.xb.o.stage='decl';render()}
+function xoPay(){const o=S.xb.o;o.desc=val('xo-desc')||'Gift';o.val=val('xo-val')||'30';o.stage='done';o.code='SP-'+Math.random().toString(36).slice(2,8).toUpperCase();render();window.scrollTo(0,0)}
+const DF={Malaysia:1,Australia:1.8,'United States':2.2,'United Kingdom':2.2,Japan:1.6,China:1.5};
+const XO=[['eco','Economy','7 to 12 days','Tracked at key points',8,3.5],['std','Standard','4 to 7 days','Tracked end to end',11,4.5],['exp','Express','2 to 4 days','Tracked end to end, priority customs',18,7]];
+const xoPrice=(r,o)=>r[4]+r[5]*o.kg*DF[o.dest];
+V.xb=()=>{const x=S.xb;const tabs=`<div class="tabs" role="tablist"><button class="${x.tab==='in'?'on':''}" onclick="openXB('in')">Shop and ship in (vPost)</button><button class="${x.tab==='out'?'on':''}" onclick="openXB('out')">Send overseas</button></div>`;
+ let body='';
+ if(x.tab==='in'){
+  if(!S.user)body=`<div class="panel"><h1>vPost</h1><p>Shop overseas stores that do not ship to Singapore. Get free overseas addresses, we receive and consolidate your orders, then deliver to you.</p><div class="btns"><button class="btn lg" onclick="startSignup(['vpost'])">Sign up with SingPost ID</button><button class="btn ghost lg" onclick="go('login')">Log in</button></div></div>`;
+  else if(!S.user.services.vpost)body=`<div class="panel"><h1>Get your free overseas addresses</h1><p>You are signed in. Activate vPost with one tap. No new form.</p><button class="btn lg" onclick="switchTo('vpost')">Activate vPost</button></div>`;
+  else if(x.stage==='list'){const n=Object.values(x.sel).filter(Boolean).length;
+   body=`<h1>vPost</h1><p class="mut">Hi ${esc(first())}. Shop at overseas stores, we receive, consolidate and deliver.</p><h2>Your overseas addresses</h2><div class="grid4">${Object.keys(ADR).map(k=>`<div class="addr"><b>${ADR[k][0]}</b><span>${ADR[k][1]}<br>${ADR[k][2]}</span><button class="btn ghost" style="padding:6px 12px" onclick="copyAddr('${k}')">Copy address</button></div>`).join('')}</div><p class="mut small">Illustrative addresses and country list.</p>
+   <h2 style="margin-top:26px">At the vPost warehouse<span class="nw">New</span></h2><div class="newbox">${PK.map(p=>`<div class="prow"><label style="display:flex;gap:12px;align-items:center"><input type="checkbox" ${x.sel[p.id]?'checked':''} ${p.st==='arrived'?'':'disabled'} onchange="xbSel('${p.id}')"><span><b>${p.d}</b><span class="mut small">${p.m} &middot; ${p.kg} kg</span></span></label><span class="chip ${p.st==='arrived'?'ok':''}">${p.st==='arrived'?'Arrived at warehouse':'On its way to warehouse'}</span></div>`).join('')}</div>
+   <div class="bar"><span>${n?`<b>${n} item${n>1?'s':''} selected.</b> Ship together to save on shipping.`:'Select items that have arrived to ship them together.'}</span><button class="btn lg" ${n?'':'disabled'} onclick="xbGo('ship')">Ship together</button></div>`}
+  else if(x.stage==='ship'){const c=xbCalc();
+   body=`<h1>Ship together</h1><p class="mut">${c.ps.map(p=>p.d).join(' + ')} &middot; ${c.kg.toFixed(1)} kg combined</p><h2>Delivery</h2>${[['home','To my home','Delivered to Blk 123 Example Street'],['locker','To a locker','Collect any time. Saves S$1.00'],['po','Collect at a post office','Saves S$1.00']].map(([k,n,d])=>`<button class="opt ${x.dlv===k?'on':''}" onclick="xbOpt('${k}')"><span class="mk">${x.dlv===k?I.check:''}</span><span><b>${n}</b><span class="d">${d}</span></span></button>`).join('')}
+   <div class="panel" style="margin-top:14px"><div class="prow" style="border:0;padding:4px 0;margin:0"><span>Shipping to Singapore</span><b>${money(c.ship)}</b></div><div class="prow" style="border:0;padding:4px 0;margin:0"><span>GST estimate\u2020</span><b>${money(c.gst)}</b></div>${c.adj?`<div class="prow" style="border:0;padding:4px 0;margin:0"><span>Locker or post office saving</span><b>-S$1.00</b></div>`:''}<div class="prow" style="border:0;padding:8px 0 0;margin:0"><b>Total, one payment</b><b>${money(c.tot)}</b></div></div>
+   <p class="mut small">\u2020 Illustrative estimate. GST and duty treatment to be confirmed with Finance before client use.</p><div class="btns"><button class="btn ghost" onclick="xbGo('list')">Back</button><button class="btn lg" onclick="xbGo('done')">Pay ${money(c.tot)}</button></div>`}
+  else{body=`<div class="okbox">${I.check} Paid. One parcel is on its way</div><h1>Your parcel journey</h1><div class="panel newbox">${tlHtml([{s:'done',t:'Items received at vPost warehouse',w:'US'},{s:'done',t:'Consolidated into one parcel',w:'Saved vs shipping separately'},{s:'now',t:'Departed origin',w:'Flight booked'},{s:'',t:'Arrived in Singapore, customs clearance',w:'We update you automatically'},{s:'',t:x.dlv==='home'?'Out for delivery':'Ready to collect',w:x.dlv==='home'?'To your address':'We message you with a pickup code'}])}</div><div class="btns"><button class="btn ghost" onclick="S.xb.sel={};xbGo('list')">Back to vPost</button></div>`}
+ }else{
+  if(!S.user)return needLogin();
+  const o=x.o;
+  if(o.stage==='form')body=`<h1>Send overseas</h1><p class="mut">See prices and duties before you commit.</p><div class="panel"><div class="grid3"><div class="f"><label for="xo-d">Destination</label><select id="xo-d">${Object.keys(DF).map(k=>`<option ${o.dest===k?'selected':''}>${k}</option>`).join('')}</select></div><div class="f"><label for="xo-k">Weight (kg)</label><input id="xo-k" type="number" min="0.1" step="0.1" value="${o.kg}"></div><div class="f"><label for="xo-t">What are you sending?</label><select id="xo-t"><option value="goods" ${o.type==='goods'?'selected':''}>Goods or gift</option><option value="docs" ${o.type==='docs'?'selected':''}>Documents</option></select></div></div><button class="btn lg" onclick="xoRead()">Compare services</button></div>`;
+  if(o.stage==='opts')body=`<h1>${esc(o.dest)} &middot; ${o.kg} kg</h1><p class="mut">Illustrative prices and transit times.</p>${XO.map(r=>`<button class="opt ${o.opt===r[0]?'on':''}" onclick="xoSet('opt','${r[0]}')"><span class="mk">${o.opt===r[0]?I.check:''}</span><span><b>${r[1]}</b><span class="d">${r[2]} &middot; ${r[3]}${o.type==='goods'?' &middot; Duties and taxes estimate shown at the next step':''}</span></span><span class="pr">${money(xoPrice(r,o))}</span></button>`).join('')}<div class="btns"><button class="btn ghost" onclick="xoSet('stage','form')">Back</button><button class="btn lg" ${o.opt?'':'disabled'} onclick="xoDecl()">Continue</button></div>`;
+  if(o.stage==='decl'){const r=XO.find(z=>z[0]===o.opt);body=`<h1>Customs details</h1><p class="mut">We fill the declaration form from this. No paper form.</p><div class="panel"><div class="f"><label for="xo-desc">What is inside?</label><input id="xo-desc" value="${esc(o.desc)}"></div><div class="f"><label for="xo-val">Value (S$)</label><input id="xo-val" inputmode="decimal" value="${esc(o.val)}"></div><div class="prow" style="border:0;padding:0;margin:0 0 8px"><span>${r[1]} to ${esc(o.dest)}</span><b>${money(xoPrice(r,o))}</b></div><p class="mut small">Duties and taxes in ${esc(o.dest)} are estimated on the declared value and shown at checkout (illustrative).</p></div><div class="btns"><button class="btn ghost" onclick="xoSet('stage','opts')">Back</button><button class="btn lg" onclick="xoPay()">Pay and get drop-off code</button></div>`}
+  if(o.stage==='done'){const r=XO.find(z=>z[0]===o.opt);body=`<div class="okbox">${I.check} Paid ${money(xoPrice(r,o))}</div><h1>Drop it off, then follow it all the way</h1><div class="qrbox newbox"><div>${qr(o.code)}</div><div><div class="code">${o.code}</div><p class="mut small">Illustrative QR. Scan at drop-off.</p></div></div><h3 style="margin-top:22px">What you will see, end to end</h3><div class="panel">${tlHtml([{s:'now',t:'Waiting for drop-off',w:'Show your code at a drop-off point'},{s:'',t:'Processed in Singapore',w:''},{s:'',t:'Departed Singapore',w:''},{s:'',t:'Arrived in '+o.dest+', customs',w:'Duties shown if any'},{s:'',t:'With destination carrier',w:''},{s:'',t:'Delivered',w:''}])}</div><div class="btns"><button class="btn ghost" onclick="openXB('out')">Send another</button></div>`}
+ }
+ return `<section class="wrap pg">${S.user||x.tab==='in'?tabs:''}${body}</section>`};
+
+/* ---------- Shop ---------- */
+const PRODS=[['Padded mailers, pack of 10',4.5],['Medium boxes, pack of 5',6.9],['Bubble wrap roll',7.5],['Collectible stamp sheet',5],['Postcard set',6],['Gift tote',12.9]];
+function addCart(p){S.cart+=p;S.p.ordered=false;render()}
+V.shop=()=>`<section class="wrap pg"><div class="ph"><h1>Shop@SingPost</h1><p class="mut">Stamps, packing materials and gifts. ${S.user?'Signed in with your SingPost ID. Saved address and payment are ready.':'<a href="#" onclick="return go(\'login\')">Log in</a> for faster checkout.'}</p></div>
+ ${S.p.ordered?`<div class="okbox">${I.check} Order placed. Packing materials on the way. <button class="btn" style="margin-left:10px;padding:6px 14px" onclick="startSend()">Ready to post? Send a parcel</button></div>`:''}
+ <div class="grid3">${PRODS.map(p=>`<div class="prod"><div class="ph1">Product image</div><div class="b"><b>${p[0]}</b><div class="mut small">${money(p[1])} (illustrative)</div><button class="btn ghost" style="margin-top:8px;padding:6px 14px" onclick="addCart(${p[1]})">Add to cart</button></div></div>`).join('')}</div>
+ <div class="bar"><span><b>Cart ${money(S.cart)}</b></span><button class="btn lg" ${S.cart?'':'disabled'} onclick="if(!S.user){go('login');return}S.cart=0;S.p.ordered=true;render()">${S.user?'Pay with saved details':'Log in to check out'}</button></div></section>`;
+
+/* ---------- Cases ---------- */
+V.cases=()=>!S.user?needLogin():`<section class="wrap pg"><div class="ph"><h1>My cases</h1><p class="mut">One case per issue, whichever channel you used.</p></div>
+ ${S.cases.length?S.cases.map(c=>`<div class="panel" style="margin-bottom:14px"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${c.id}</h3><span class="chip warn">With an agent</span></div><p class="mut">${c.sum}</p>${tlHtml([{s:'done',t:'Case created from chat',w:'Details attached. No need to repeat yourself.'},...c.steps.map(t=>({s:'done',t,w:'Done in chat'})),{s:'done',t:'Agent assigned',w:'Just now'},{s:'now',t:'Agent is reviewing',w:'We update you here and on WhatsApp'}])}</div>`).join(''):`<div class="panel"><p>No cases yet. Ask the assistant if a delivery goes wrong.</p><button class="btn" onclick="chatOpen()">Ask the assistant</button></div>`}</section>`;
+
+/* ---------- Journey 6: assistant ---------- */
+function chatRender(){const c=S.chat;$('#fab').innerHTML=I.chat+' Help';$('#fab').style.display=c.open?'none':'flex';$('#chat').hidden=!c.open;if(!c.open)return;
+ $('#cmsgs').innerHTML=c.msgs.map(m=>`<div class="m ${m.r}">${m.h}</div>`).join('')+(c.typing?'<div class="m b"><span class="typing"><i></i><i></i><i></i></span></div>':'');
+ $('#cchips').innerHTML=c.chips.map((t,i)=>`<button onclick="chatChip(${i})">${esc(t)}</button>`).join('');const m=$('#cmsgs');m.scrollTop=m.scrollHeight}
+function chatOpen(){const c=S.chat;c.open=true;if(!c.started){c.started=true;bot(`Hi${S.user?' '+esc(first()):''}. I can track a parcel, change a delivery, or pass you to a person with everything already shared.`,300,["Where's my parcel?",'Change my delivery','Talk to a person'])}chatRender();setTimeout(()=>{const i=$('#cin');if(i)i.focus()},50);return false}
+function chatClose(){S.chat.open=false;chatRender()}
+function bot(h,d,chips,after){S.chat.typing=true;chatRender();setTimeout(()=>{S.chat.msgs.push({r:'b',h});S.chat.typing=false;S.chat.chips=chips||[];chatRender();if(after)after()},d==null?600:d)}
+function chatChip(i){const t=S.chat.chips[i];S.chat.chips=[];userSay(t)}
+function chatForm(e){e.preventDefault();const i=$('#cin');const t=i.value.trim();if(!t)return false;i.value='';S.chat.chips=[];userSay(t);return false}
+function userSay(t){S.chat.msgs.push({r:'u',h:esc(t)});chatRender();intent(t)}
+function card(rows){return '<div class="cardx">'+rows.map(r=>`<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')+'</div>'}
+function intent(t){const s=t.toLowerCase();
+ if(/person|agent|human|speak/.test(s))return handoff();
+ if(/locker [ab]/.test(s))return done('Moved to '+t.split(' \u00b7')[0],'Locker collection code sent by WhatsApp and SMS');
+ if(/redeliver|re-deliver|reschedule|tomorrow/.test(s))return done('Re-delivery booked for tomorrow, 9 am to 1 pm','We message you an hour before arrival');
+ if(/post office|collect/.test(s))return done('Held for collection at post office B','Bring ID. Held for 14 days (illustrative)');
+ if(/locker/.test(s)){S.chat.parcel=S.chat.parcel||'SP45821390SG';return bot('Two lockers near the address on this parcel (illustrative):',500,['Locker A \u00b7 0.4 km','Locker B \u00b7 0.9 km','Talk to a person'])}
+ if(/where|track|status|parcel|change|delivery|sp\d{6,}/.test(s)){S.chat.parcel='SP45821390SG';return bot((S.user?'Found 2 parcels on your account. This one needs action:':'Found it.')+card([['Parcel','SP45821390SG'],['Status','Delivery attempted'],['When','Today, 2:14 pm'],['Reason','Recipient not home']])+'<div style="margin-top:8px">How would you like to fix it?</div>',700,['Re-deliver tomorrow','Send to a locker','Collect at post office','Talk to a person'])}
+ if(/^(yes|thanks|thank|sorted|solved)/.test(s))return bot('Good. You will get an update before delivery. Anything else?',500,["Where's my parcel?",'Talk to a person']);
+ bot('I can help with tracking, changing a delivery, or sending you to a person. Pick one:',500,["Where's my parcel?",'Change my delivery','Talk to a person'])}
+function done(what,sub){S.chat.steps.push(what);bot('<b>Done.</b> '+what+'.'+card([['Next',sub],['Updated','Delivery team and you']])+'<div style="margin-top:8px">Is that sorted?</div>',800,["Yes, that's sorted",'No, I need a person'])}
+function handoff(){const c=S.chat;const no=c.parcel||'SP45821390SG';const id='CS-'+(260000+Math.floor(Math.random()*9999));
+ S.cases.unshift({id,sum:'Delivery problem on '+no,steps:[...c.steps]});
+ bot('Passing you to an agent. You will not need to repeat anything. This is what they see:'+card([['Case',id],['Customer',S.user?esc(S.user.name):'Guest'],['Parcel',no],['Done in chat',c.steps.length?esc(c.steps.join('; ')):'Nothing yet']]),700,[],()=>{
+  c.typing=true;chatRender();setTimeout(()=>{c.msgs.push({r:'s',h:'Agent joined (demo)'});c.msgs.push({r:'b',h:`Hi ${S.user?esc(first()):'there'}. I have your parcel and what you already tried. How can I help from here?`});c.typing=false;c.chips=['View my case'];chatRender()},1400)})}
+const _intent=intent;intent=function(t){if(/view my case/i.test(t)){go('cases');return}_intent(t)};
+
+/* ---------- render + jump ---------- */
+function render(){hdr();svcbar();$('#view').innerHTML=(V[S.view]||V.home)();ftr();chatRender()}
+function jump(k){$('#jlist').classList.remove('open');
+ if(k==='0a'){S.user=null;S.biz=newBiz();return startSignup()}
+ if(k==='0b'){S.user=null;S.biz=newBiz();return go('login')}
+ ensureLogin();
+ if(k==='0c'){go('mypost');setTimeout(()=>toggleDD('acct'),60)}
+ if(k==='2')startSend();
+ if(k==='3'){S.biz=newBiz();S.user.services.biz=false;go('bizonb')}
+ if(k==='4')openXB('in');
+ if(k==='6'){go('home');chatOpen()}}
+render();
+</script>
+</body>
+</html>
